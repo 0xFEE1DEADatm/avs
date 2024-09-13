@@ -1,0 +1,78 @@
+// Интерфейс стратегии
+interface RouteStrategy {
+    void buildRoute(String pointA, String pointB);
+}
+
+// Конкретная стратегия для автомобильного маршрута
+class CarRouteStrategy implements RouteStrategy {
+    @Override
+    public void buildRoute(String pointA, String pointB) {
+        System.out.println("Прокладываем автомобильный маршрут из " + pointA + " в " + pointB);
+    }
+}
+
+// Конкретная стратегия для пешего маршрута
+class WalkingRouteStrategy implements RouteStrategy {
+    @Override
+    public void buildRoute(String pointA, String pointB) {
+        System.out.println("Прокладываем пешеходный маршрут из " + pointA + " в " + pointB);
+    }
+}
+
+// Конкретная стратегия для маршрута на общественном транспорте
+class PublicTransportRouteStrategy implements RouteStrategy {
+    @Override
+    public void buildRoute(String pointA, String pointB) {
+        System.out.println("Прокладываем маршрут на общественном транспорте из " + pointA + " в " + pointB);
+    }
+}
+
+// Конкретная стратегия для веломаршрута
+class BikeRouteStrategy implements RouteStrategy {
+    @Override
+    public void buildRoute(String pointA, String pointB) {
+        System.out.println("Прокладываем веломаршрут из " + pointA + " в " + pointB);
+    }
+}
+
+// Класс Navigator использует стратегию
+class Navigator {
+    private RouteStrategy strategy;
+
+    // Установка стратегии
+    public void setStrategy(RouteStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    // Построение маршрута
+    public void buildRoute(String pointA, String pointB) {
+        if (strategy != null) {
+            strategy.buildRoute(pointA, pointB);
+        } else {
+            System.out.println("Стратегия не выбрана.");
+        }
+    }
+}
+
+// Основной класс программы
+public class Main {
+    public static void main(String[] args) {
+        Navigator navigator = new Navigator();
+
+        // Прокладываем автомобильный маршрут
+        navigator.setStrategy(new CarRouteStrategy());
+        navigator.buildRoute("Точка A", "Точка B");
+
+        // Прокладываем пешеходный маршрут
+        navigator.setStrategy(new WalkingRouteStrategy());
+        navigator.buildRoute("Точка A", "Точка B");
+
+        // Прокладываем маршрут на общественном транспорте
+        navigator.setStrategy(new PublicTransportRouteStrategy());
+        navigator.buildRoute("Точка A", "Точка B");
+
+        // Прокладываем веломаршрут
+        navigator.setStrategy(new BikeRouteStrategy());
+        navigator.buildRoute("Точка A", "Точка B");
+    }
+}
