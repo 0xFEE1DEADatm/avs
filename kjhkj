@@ -1,78 +1,83 @@
-// Интерфейс стратегии
-interface RouteStrategy {
-    void buildRoute(String pointA, String pointB);
+interface Door {
+    void install();
 }
 
-// Конкретная стратегия для автомобильного маршрута
-class CarRouteStrategy implements RouteStrategy {
+class WoodenDoor implements Door {
     @Override
-    public void buildRoute(String pointA, String pointB) {
-        System.out.println("Прокладываем автомобильный маршрут из " + pointA + " в " + pointB);
+    public void install() {
+        System.out.println("Wooden door installed by Carpenter.");
     }
 }
 
-// Конкретная стратегия для пешего маршрута
-class WalkingRouteStrategy implements RouteStrategy {
+class SteelDoor implements Door {
     @Override
-    public void buildRoute(String pointA, String pointB) {
-        System.out.println("Прокладываем пешеходный маршрут из " + pointA + " в " + pointB);
+    public void install() {
+        System.out.println("Steel door installed by Welder.");
     }
 }
 
-// Конкретная стратегия для маршрута на общественном транспорте
-class PublicTransportRouteStrategy implements RouteStrategy {
+class PlasticDoor implements Door {
     @Override
-    public void buildRoute(String pointA, String pointB) {
-        System.out.println("Прокладываем маршрут на общественном транспорте из " + pointA + " в " + pointB);
+    public void install() {
+        System.out.println("Plastic door installed by PVCSpecialist.");
     }
 }
 
-// Конкретная стратегия для веломаршрута
-class BikeRouteStrategy implements RouteStrategy {
+abstract class DoorFactory {
+    abstract Door createDoor(String type);
+}
+
+class WoodenDoorFactory extends DoorFactory {
     @Override
-    public void buildRoute(String pointA, String pointB) {
-        System.out.println("Прокладываем веломаршрут из " + pointA + " в " + pointB);
+    Door createDoor(String type) {
+        return new WoodenDoor();
     }
 }
 
-// Класс Navigator использует стратегию
-class Navigator {
-    private RouteStrategy strategy;
-
-    // Установка стратегии
-    public void setStrategy(RouteStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    // Построение маршрута
-    public void buildRoute(String pointA, String pointB) {
-        if (strategy != null) {
-            strategy.buildRoute(pointA, pointB);
-        } else {
-            System.out.println("Стратегия не выбрана.");
-        }
+class SteelDoorFactory extends DoorFactory {
+    @Override
+    Door createDoor(String type) {
+        return new SteelDoor();
     }
 }
 
-// Основной класс программы
+class PlasticDoorFactory extends DoorFactory {
+    @Override
+    Door createDoor(String type) {
+        return new PlasticDoor();
+    }
+}
+
+class Carpenter {
+    public void installWoodenDoor(WoodenDoor door) {
+        door.install();
+    }
+}
+
+class Welder {
+    public void installSteelDoor(SteelDoor door) {
+        door.install();
+    }
+}
+
+class PVCSpecialist {
+    public void installPlasticDoor(PlasticDoor door) {
+        door.install();
+    }
+}
+
 public class Main {
     public static void main(String[] args) {
-        Navigator navigator = new Navigator();
+        DoorFactory factory = new WoodenDoorFactory();
+        Door door = factory.createDoor("wooden");
+        door.install(); 
 
-        // Прокладываем автомобильный маршрут
-        navigator.setStrategy(new CarRouteStrategy());
-        navigator.buildRoute("Точка A", "Точка B");
+        factory = new SteelDoorFactory();
+        door = factory.createDoor("steel");
+        door.install();
 
-        // Прокладываем пешеходный маршрут
-        navigator.setStrategy(new WalkingRouteStrategy());
-        navigator.buildRoute("Точка A", "Точка B");
-
-        // Прокладываем маршрут на общественном транспорте
-        navigator.setStrategy(new PublicTransportRouteStrategy());
-        navigator.buildRoute("Точка A", "Точка B");
-
-        // Прокладываем веломаршрут
-        navigator.setStrategy(new BikeRouteStrategy());
-        navigator.buildRoute("Точка A", "Точка B");
+        factory = new PlasticDoorFactory();
+        door = factory.createDoor("plastic");
+        door.install();
     }
 }
